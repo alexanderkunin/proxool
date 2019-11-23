@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import java.text.DecimalFormat;
+import java.util.Collections;
 
 /**
  * Manages a connection. This is wrapped up inside a...
@@ -59,7 +60,7 @@ public class ProxyConnection implements ProxyConnectionIF {
 
     private String requester;
 
-    private Set openStatements = new HashSet();
+    private Set openStatements = Collections.synchronizedSet(new HashSet());
 
     private DecimalFormat idFormat = new DecimalFormat("0000");
 
@@ -173,7 +174,7 @@ public class ProxyConnection implements ProxyConnectionIF {
     /**
      * @see ProxyConnectionIF#registerClosedStatement
      */
-    public void registerClosedStatement(Statement statement) {
+    synchronized public void registerClosedStatement(Statement statement) {
         if (openStatements.contains(statement)) {
             openStatements.remove(statement);
         } else {
